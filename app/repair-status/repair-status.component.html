@@ -1,0 +1,56 @@
+<loading-container [loading]="loading">
+    <div class="col-md-3">
+        <legend>Unit Information</legend>
+        <!-- Unit Info -->
+        <unit-info [unitInfo]="Model.UnitInfo"></unit-info>
+        <!-- Operator Info -->
+        <operator-info [Data]="Model.OperatorInfo"></operator-info>
+    </div>
+    <div *ngIf="CanRecordRepairs" class="col-md-8">
+        <form class="form-horizontal" [ngFormModel]="StatusForm">
+            <fieldset>
+                <legend>Status</legend>
+                <!-- Continue/Complete/Scrap -->
+                <div class="form-group">
+                    <div class="btn-group col-md-8" data-toggle="buttons">
+                        <label class="btn btn-primary active btn-info" [(ngModel)]="Model.Status"
+                               [ngClass]="{active: Model.Status == 1, disabled: Service.Status.IsProcessing}"
+                               btnRadio="1">Continue</label>
+                        <label class="btn btn-primary active btn-success" [(ngModel)]="Model.Status"
+                               [ngClass]="{active:Model.Status == 2, disabled: Service.Status.IsProcessing}"
+                               btnRadio="2">Complete</label>
+                        <label class="btn btn-primary btn-danger" [(ngModel)]="Model.Status"
+                               [ngClass]="{active: Model.Status == 3, disabled: Service.Status.IsProcessing}"
+                               btnRadio="3">Scrap</label>
+                    </div>
+                </div>
+                <br /><br />
+                <!-- Notes/Parts/Finish/Cancel -->
+                <div class="form-group">
+                    <div class="col-md-8">
+                        <button type="button" id="notesButton" name="notesButton"
+                                (click)="Service.GoToNotes(Model.UnitInfo.TrackingId)"
+                                [disabled]="Service.Status.IsProcessing"
+                                class="btn btn-primary btn-lg">Notes
+                        </button>
+                        <button type="button" id="partsButton" name="partsButton"
+                                (click)="Service.GoToParts(Model.UnitInfo.TrackingId)"
+                                [disabled]="Service.Status.IsProcessing"
+                                class="btn btn-primary btn-lg">Parts
+                        </button>
+                        <button type="button" id="finalizeButton" name="finalizeButton"
+                                (click)="Finish()"
+                                [disabled]="!IsFormEnabled()"
+                                class="btn btn-primary btn-lg">{{FinishButtonText}}
+                        </button>
+                        <button type="reset" id="cancelButton" name="cancelButton"
+                                (click)="Service.GoToDone()"
+                                class="btn btn-inverse btn-lg">Cancel
+                        </button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <error-handler [Data]="Model.Errors"></error-handler>
+</loading-container>

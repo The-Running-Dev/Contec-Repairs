@@ -1,0 +1,55 @@
+<loading-container [loading]="loading">
+    <div class="col-md-3">
+        <legend>Unit Information</legend>
+        <!-- Unit Info -->
+        <unit-info [unitInfo]="Model.UnitInfo"></unit-info>
+        <!-- Operator Info -->
+        <operator-info [Data]="Model.OperatorInfo"></operator-info>
+    </div>
+    <div *ngIf="!IsError" class="col-md-8">
+        <form class="form-horizontal" [ngFormModel]="NotesForm">
+            <fieldset>
+                <legend>Notes</legend>
+                <!-- Notes -->
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <textarea class="form-control" id="notes" name="notes"
+                                  [(ngModel)]="Model.Notes"
+                                  [disabled]="Service.Status.IsProcessing"
+                                  [ngFormControl]="NotesForm.controls.NotesControl"
+                                  placeholder="Notes"
+                                  required
+                                  maxlength="2000" rows="10" focusElement></textarea>
+                    </div>
+                </div>
+                <!-- Parts/Save/Cancel -->
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <button type="button" id="partsButton" name="partsButton"
+                                (click)="Service.GoToParts(Model.UnitInfo.TrackingId)"
+                                [disabled]="Service.Status.IsProcessing"
+                                class="btn btn-primary btn-lg">Parts
+                        </button>
+                        <button type="button" id="saveButton" name="saveButton"
+                                (click)="Save()"
+                                [disabled]="!Service.AllowSave() || Service.Status.IsProcessing"
+                                class="btn btn-primary btn-lg">{{SaveButtonText}}
+                        </button>
+                        <button type="reset" id="doneButton" name="doneButton"
+                                (click)="Service.GoToDone()"
+                                class="btn btn-inverse btn-lg">Cancel
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="!Service.AllowSave()" class="form-group">
+                    <div class="col-md-10">
+                        <div class="alert alert-info">
+                            Please Enter Part(s) or Notes to Complete and Save This Repair
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <error-handler [Data]="Model.Errors"></error-handler>
+</loading-container>

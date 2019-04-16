@@ -1,0 +1,14 @@
+<div *ngIf="Model.TrackingId">
+    <label class="col-md-2 control-label">Tracking Id</label>
+    <div class="col-md-10">{{Model.TrackingId}}</div>
+</div>
+
+<div *ngIf="Model.CustomerName">
+    <label class="col-md-2 control-label">Customer</label>
+    <div class="col-md-10">{{Model.CustomerName}}</div>
+</div>
+
+<div *ngIf="Model.OrderId">
+    <label class="col-md-2 control-label">Order</label>
+    <div class="col-md-10">{{Model.OrderId}} on {{Model.OrderDate | dateTimeFormat}}</div>
+</div>

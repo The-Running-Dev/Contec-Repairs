@@ -1,0 +1,96 @@
+<loading-container [loading]="loading">
+    <div class="col-md-3">
+        <legend>Unit Information</legend>
+        <!-- Unit Info -->
+        <unit-info [unitInfo]="Model.UnitInfo"></unit-info>
+        <!-- Operator Info -->
+        <operator-info [Data]="Model.OperatorInfo"></operator-info>
+    </div>
+    <div *ngIf="!IsError" class="col-md-8">
+        <form class="form-horizontal" [ngFormModel]="PartsForm">
+            <fieldset>
+                <legend>Parts</legend>
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <part-search
+                                [BaseUrl]="Service.Config().ApiUrls.BaseUrl"
+                                (keyup)="OnPartKeyUp($event)"
+                                (keyup.enter)="OnPartKeyUpEnter($event)">
+                        </part-search>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <input type="text" class="number-entry" id="Quantity"
+                               [(ngModel)]="Quantity"
+                               pattern="(\d+){1,9}"
+                               required
+                               ngControl="QuantityControl"
+                               #QuantityControl="ngForm"
+                               [disabled]="Service.Status.IsProcessing"
+                               (keyup.enter)="AddItem()"
+                                autocomplete="off" />
+                        <span class="invalid-entry" *ngIf="!QuantityControl.valid && !Service.Status.IsProcessing">
+                            <span class="glyphicon glyphicon-exclamation-sign text-danger" title="Invalid Quantity"></span>
+                            <span class="text-danger">Invalid Quantity</span>
+                        </span>
+                    </div>
+                </div>
+                <!-- Add/Back -->
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <button type="button" id="addItemButton" name="addItemButton"
+                                (click)="AddItem()"
+                                [disabled]="!AddPartIsValid()"
+                                class="btn btn-primary btn-lg">Add
+                        </button>
+                    </div>
+                </div>
+                <!-- Parts -->
+                <div *ngIf="Model.Parts.length > 0" class="form-group">
+                    <div class="col-md-10">
+                        <p-dataTable [value]="Model.Parts" [rows]="10" [paginator]="true" [editable]="true">
+                            <p-column field="Id" header="Id"></p-column>
+                            <p-column field="Quantity" header="Quantity" [editable]="true"></p-column>
+                            <p-column header="Remove">
+                                <template let-col="rowData">
+                                    <button type="button" (click)="RemoveItem(col)">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </button>
+                                </template>
+                            </p-column>
+                        </p-dataTable>
+                    </div>
+                </div>
+                <br /><br />
+                <!-- Notes/Save/Cancel -->
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <button type="button" id="notesButton" name="notesButton"
+                                (click)="Service.GoToNotes(Model.UnitInfo.TrackingId)"
+                                [disabled]="Service.Status.IsProcessing"
+                                class="btn btn-primary btn-lg">Notes
+                        </button>
+                        <button type="button" id="saveButton" name="saveButton"
+                                (click)="Save()"
+                                [disabled]="!Service.AllowSave() || Service.Status.IsProcessing"
+                                class="btn btn-primary btn-lg">{{SaveButtonText}}
+                        </button>
+                        <button type="reset" id="cancelButton" name="cancelButton"
+                                (click)="Service.GoToDone()"
+                                class="btn btn-inverse btn-lg">Cancel
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="!Service.AllowSave()" class="form-group">
+                    <div class="col-md-10">
+                        <div class="alert alert-info">
+                            Please Enter Part(s) or Notes to Complete and Save This Repair
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <error-handler [Data]="Model.Errors"></error-handler>
+</loading-container>

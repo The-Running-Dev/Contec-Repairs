@@ -1,0 +1,55 @@
+﻿<div class="col-md-12">
+    <form class="form-horizontal">
+        <fieldset>
+            <legend>Lookup by Tracking Id</legend>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="trackingId"></label>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-barcode" aria-hidden="true"></span>
+                        </span>
+                        <input id="trackingId" name="trackingId"
+                               [ngFormControl]="SearchForm.controls.TrackingId"
+                               (keyup.enter)="OnKeyUpEnter(SearchForm.controls.TrackingId)"
+                               pattern="(\d+){1,8}"
+                               focusElement
+                               class="form-control" placeholder="Tracking Id" type="text"
+                               required
+                               [disabled]="Service.Status.IsProcessing"
+                               [ngClass]="{loading: Service.Status.IsProcessing}"
+                               autocomplete="off">
+                        <span class="invalid-entry" *ngIf="IsTrackingIdValid(SearchForm.controls.TrackingId) && !Service.Status.IsProcessing">
+                            <span class="glyphicon glyphicon-exclamation-sign text-danger"
+                                  title="Invalid Tracking Id"></span>
+                            <span class="text-danger">Invalid Tracking Id</span>
+                        </span>
+                    </div>
+                    <p class="help-block">Please Enter the Tracking Id</p>
+                </div>
+            </div>
+            <!-- Continue -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="continueButton"></label>
+                <div class="col-md-8">
+                    <button type="button" *ngIf="!SearchForm.controls.TrackingId.pending" id="continueButton" name="continueButton"
+                            (click)="Service.GoToParts(SearchForm.controls.TrackingId.value)"
+                            [disabled]="!SearchForm.controls.TrackingId.valid"
+                            class="btn btn-primary btn-lg">Continue</button>
+                </div>
+            </div>
+            <div *ngIf="Service.Config().AllowDiagnostics" class="form-group">
+                <label class="col-md-4 control-label">Enable Diagnostics</label>
+                <div class="col-md-8">
+                    <p-inputSwitch [(ngModel)]="Service.Config().EnableDiagnostics" (onChange)="OnEnableDiagnostics_Changed($event)"></p-inputSwitch>
+                    <p *ngIf="Service.Config().EnableDiagnostics" class="help-block">
+                        This will allow you to record repairs without the existence of repair status, or the inventory quantity check.
+                        <br />
+                        It will also show you the data after you process the request.
+                    </p>
+                </div>
+            </div>
+            <error-handler [Data]="Errors"></error-handler>
+        </fieldset>
+    </form>
+</div>

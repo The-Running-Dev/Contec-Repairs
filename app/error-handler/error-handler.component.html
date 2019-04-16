@@ -1,0 +1,10 @@
+<div *ngIf="Model.IsError" class="col-md-8">
+    <legend>Error</legend>
+    <div class="alert alert-danger">
+        {{Model.Message}}
+    </div>
+    <br />
+    <button type="reset"
+            (click)="Service.GoToDone()" class="btn btn-inverse btn-lg">Done
+    </button>
+</div>

@@ -1,0 +1,39 @@
+{
+  "name": "orders",
+  "description": "Orders",
+  "main": "index.js",
+  "authors": [
+    "Jack Frost <jfrost@gocontec.com>"
+  ],
+  "license": "ISC",
+  "moduleType": [],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.6",
+    "components-font-awesome": "~4.5.0",
+    "jquery-ui": "^1.12.0"
+  },
+  "overrides": {
+    "bootstrap": {
+      "main": [
+        "dist/css/bootstrap.min.css",
+        "dist/js/bootstrap.min.js",
+        "dist/fonts/**"
+      ]
+    },
+    "jquery-ui": {
+      "main": [
+        "jquery-ui.min.css",
+        "jquery-ui.min.js",
+        "themes/base/images/**"
+      ]
+    }
+  }
+}

@@ -1,0 +1,75 @@
+<loading-container [loading]="loading">
+    <div class="col-md-3">
+        <legend>Unit Information</legend>
+        <!-- Unit Info Component -->
+        <unit-info [unitInfo]="Model.UnitInfo"></unit-info>
+        <!-- Operator Info -->
+        <operator-info [Data]="Model.OperatorInfo"></operator-info>
+    </div>
+    <div class="col-md-8">
+        <div *ngIf="Activity.length > 0">
+            <legend>Activity</legend>
+            <p-dataTable [value]="Activity">
+                <p-column field="Id" header="Id"></p-column>
+                <p-column field="Notes" header="Notes"></p-column>
+                <p-column field="CreateDate" header="On">
+                    <template let-item="rowData">
+                        {{item.CreateDate | dateTimeFormat}}
+                    </template>
+                </p-column>
+                <p-column *ngIf="Service.AreDiagnositcsEnabled()" header="Remove">
+                    <template let-item="rowData" let-index="rowIndex">
+                        <span class="delete-toggle-button">
+                            <p-toggleButton onLabel="" offLabel=""
+                                [(ngModel)]="item.ConfirmDelete"
+                                (onChange)="DeleteRepairActivity(!$event.checked, item)"
+                                onIcon="glyphicon glyphicon-trash" offIcon="glyphicon glyphicon-remove"></p-toggleButton>
+                        </span>
+                    </template>
+                </p-column>
+            </p-dataTable>
+        </div>
+        <div *ngIf="Activity.length == 0">
+            <legend>No Activity</legend>
+        </div>
+        <br />
+        <div *ngIf="Parts.length > 0">
+            <legend>Parts</legend>
+            <div *ngIf="Parts.length > 0">
+                <p-dataTable [value]="Parts" [rows]="10" [paginator]="true">
+                    <p-column field="Id" header="Id"></p-column>
+                    <p-column field="SerialNumber" header="Serial"></p-column>
+                    <p-column field="PartId" header="Part"></p-column>
+                    <p-column field="QuantityInstalled" header="Installed"></p-column>
+                    <p-column field="RequestedOn" header="On">
+                        <template let-item="rowData">
+                            {{item.RequestedOn | dateTimeFormat}}
+                        </template>
+                    </p-column>
+                    <p-column *ngIf="Service.AreDiagnositcsEnabled()" header="Remove">
+                        <template let-item="rowData" let-index="rowIndex">
+                            <span class="delete-toggle-button">
+                                <p-toggleButton onLabel="" offLabel=""
+                                    [(ngModel)]="item.ConfirmDelete"
+                                    (onChange)="DeleteRepairPart(!$event.checked, item)"
+                                    onIcon="glyphicon glyphicon-trash" offIcon="glyphicon glyphicon-remove"></p-toggleButton>
+                            </span>
+                        </template>
+                    </p-column>
+                </p-dataTable>
+            </div>
+        </div>
+        <div *ngIf="Parts.length == 0">
+            <legend>No Parts</legend>
+        </div>
+        <br />
+        <button type="reset" id="cancelButton" name="cancelButton"
+                (click)="Service.GoToDone()"
+                class="btn btn-inverse btn-lg">Done
+        </button>
+    </div>
+    <div *ngIf="ApiResponse.IsError && !Service.Status.IsProcessing" class="col-md-8">
+        <legend>Error</legend>
+        <div class="alert alert-danger">{{ApiResponse.Message}}</div>
+    </div>
+</loading-container>
